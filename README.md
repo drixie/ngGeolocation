@@ -88,24 +88,28 @@ Here's an example from [@markmcdonald51](https://github.com/markmcdonald51) for 
 
 ```javascript
 angular
-.module('MyApp', ['ngGeolocation', 'google-maps'])
+.module('MyApp', ['ngGeolocation', 'uiGmapgoogle-maps'])
 .controller('geolocCtrl', ['$geolocation', '$scope', function($geolocation, $scope) {
 
-  $geolocation.watchPosition({
-    timeout: 60000,
-    maximumAge: 250,
-    enableHighAccuracy: true
-  })
-
-  $scope.$watch('myPosition.coords', function (newValue, oldValue) {
-    $scope.map = {
-      center: {
-        latitude: newValue.latitude,
-        longitude: newValue.longitude
-      },
-      zoom: 16
-    };                      
-  }, true);
+    $geolocation.watchPosition({
+        timeout: 60000,
+        maximumAge: 250,
+        enableHighAccuracy: true
+    })
+    
+    $scope.$on('$geolocation.position.changed', function(event, newPosition) {
+        lat = newPosition.coords.latitude;
+        lng = newPosition.coords.longitude;
+    
+        //Init Angular Google Maps
+        $scope.map = {
+            center: {
+                latitude: lat,
+                longitude: lng
+            },
+            zoom: 16
+        };
+    });
 
 });
 ```
